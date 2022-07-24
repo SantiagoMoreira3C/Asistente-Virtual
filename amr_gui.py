@@ -18,7 +18,19 @@ main_window.title("AMR assitent virtual")
 
 main_window.geometry("800x400")
 main_window.resizable(0,0)
-main_window.configure(bg='#E4E5E9')
+main_window.configure(bg='#FFF')
+
+
+# label_title = Label(main_window, text="AMR", bg="#FFE4E1", fg="#8A2BE2", font=('Arial', 50, 'bold'))
+
+# label_title.pack(pady=10)
+logo_amr = ImageTk.PhotoImage(Image.open("logo.png"))
+
+window_photo = Label(main_window, image=logo_amr)
+window_photo.pack(pady=5)
+
+
+
 
 
 
