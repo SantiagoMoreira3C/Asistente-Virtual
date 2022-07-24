@@ -27,3 +27,5 @@ pip install subprocess.run
 pip install pygame
 
 pip install mixer
+
+pip install tk

@@ -1,11 +1,28 @@
 
 import speech_recognition as sr
 import subprocess as sub
-import pyttsx3, pywhatkit, wikipedia, datetime, keyboard, colors, os
-from pygame import mixer 
+import pyttsx3
+import pywhatkit
+import wikipedia
+import datetime
+import keyboard
+import colors
+import os
+from pygame import mixer
 import threading as tr
+from tkinter import *
+from PIL import Image, ImageTk
 
-name ="amr"
+main_window=Tk()
+main_window.title("AMR assitent virtual")
+
+main_window.geometry("800x400")
+main_window.resizable(0,0)
+main_window.configure(bg='#E4E5E9')
+
+
+
+name = "amr"
 listener = sr.Recognizer()
 engine = pyttsx3.init()
 
@@ -13,19 +30,18 @@ voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[0].id)
 
 sites = {
-        'google':'google.com',
-        'youtube':'youtube.com',
-        'facebook':'facebook.com',
-        'cursos':'freecodecamp.org/learn',
-        'udemy':'udemy.com'
+    'google': 'google.com',
+    'youtube': 'youtube.com',
+    'facebook': 'facebook.com',
+    'cursos': 'freecodecamp.org/learn',
+    'udemy': 'udemy.com'
 }
 
-files ={
-    'proyecto':'PRESENTACION_PROYECTO1.pdf'
+files = {
+    'proyecto': 'PRESENTACION_PROYECTO1.pdf'
 }
 
-programs={
-    'zoom': r"C:\Users\Supersan30\AppData\Roaming\Zoom\bin\zoom.exe",
+programs = {
     'word': r"C:\Program Files\Microsoft Office\root\Office16\WINWORD.EXE"
 }
 
@@ -34,8 +50,9 @@ def talk(text):
     engine.say(text)
     engine.runAndWait()
 
+
 def listen():
-    listener = sr.Recognizer()     
+    listener = sr.Recognizer()
     with sr.Microphone() as source:
         print("Escuchando...")
         listener.adjust_for_ambient_noise(source)
@@ -50,13 +67,14 @@ def listen():
             rec = rec.replace(name, '')
     return rec
 
+
 def run_amr():
     while True:
         try:
             rec = listen()
         except UnboundLocalError:
             print("No te entendí, intenta de nuevo")
-            continue     
+            continue
         if 'reproduce' in rec:
             music = rec.replace('reproduce', '')
             print("Reproduciendo " + music)
@@ -66,12 +84,12 @@ def run_amr():
             search = rec.replace('busca', '')
             wikipedia.set_lang("es")
             wiki = wikipedia.summary(search, 1)
-            print(search +":"+ wiki)
+            print(search + ":" + wiki)
             talk(wiki)
         elif 'alarma' in rec:
             num = rec.replace('alarma', '')
             num = num.strip()
-            talk("Alarma activida a las "+ num + "horas")
+            talk("Alarma activida a las " + num + "horas")
             while True:
                 if datetime.datetime.now().strftime('%H:%M') == num:
                     print("DESPIERTA")
@@ -93,9 +111,9 @@ def run_amr():
                 if app in rec:
                     talk(f'Abriendo {app}')
                     os.startfile(programs[app])
-                    
+
         elif 'archivo' in rec:
-             for file in files:
+            for file in files:
                 if file in rec:
                     sub.Popen([files[file]], shell=True)
                     talk(f'Abriendo {file}')
@@ -103,25 +121,23 @@ def run_amr():
             try:
                 with open("nota.txt", 'a') as f:
                     write(f)
-            
-            except FileNotFoundError as e:
-                file = open("nota.txt",'a')
-                write(file)
-                
-        elif 'termina' in rec:
-                talk('Adios')
-                break 
 
-            
+            except FileNotFoundError as e:
+                file = open("nota.txt", 'a')
+                write(file)
+
+        elif 'termina' in rec:
+            talk('Adios')
+            break
+
+
 def write(f):
     talk("¿Qué quieres que escriba?")
     rec_write = listen()
-    f.write(rec_write+ os.linesep)
+    f.write(rec_write + os.linesep)
     f.close()
     talk("Listo, puedes revisarlo")
     sub.Popen("nota.txt", shell=True)
 
-if __name__ == "__main__":
-    run_amr()
 
-
+main_window.mainloop()
