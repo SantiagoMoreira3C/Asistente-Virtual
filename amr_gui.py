@@ -31,7 +31,19 @@ window_photo.pack(pady=5)
 
 
 
+def spanish_voice():
+    change_voice(0)
+def english_voice():
+    change_voice(1)    
+def mexican_voice():
+    change_voice(3)    
 
+    
+
+def change_voice(id):
+    engine.setProperty('voice', voices[id].id)
+    engine.setProperty('rate', 145)
+    talk("Hola soy tu asistente virtual AMR")
 
 
 name = "amr"
@@ -40,6 +52,9 @@ engine = pyttsx3.init()
 
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[0].id)
+engine.setProperty('rate', 145)
+for voice in voices:
+    print(voice)
 
 sites = {
     'google': 'google.com',
@@ -150,6 +165,20 @@ def write(f):
     f.close()
     talk("Listo, puedes revisarlo")
     sub.Popen("nota.txt", shell=True)
+
+button_voice_mx = Button(main_window, text="Voz México", fg="white", bg='purple', font=("Arial", 10,"bold"), command=mexican_voice)
+
+button_voice_mx.place(x=625, y=70, width=100, height=30)
+
+button_voice_es = Button(main_window, text="Voz España", fg="white", bg='purple', font=("Arial", 10,"bold" ), command=spanish_voice)
+
+button_voice_es.place(x=625, y=40,  width=100, height=30)
+
+button_voice_us = Button(main_window, text="Voz USA", fg="white", bg='purple', font=("Arial", 10,"bold" ), command=english_voice)
+
+button_voice_us.place(x=625, y=100,  width=100, height=30)
+
+
 
 
 main_window.mainloop()
