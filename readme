@@ -29,3 +29,5 @@ pip install pygame
 pip install mixer
 
 pip install tk
+
+3.necesitas revisar los idiomas instalado, english, españa, mexico de acuerdo a su posicion, para ello puedes descomentar la linea 75 y 76 y revisar en consola el orden 

@@ -8,20 +8,40 @@ import datetime
 import keyboard
 import colors
 import os
-from pygame import mixer
 import threading as tr
+from pygame import mixer
 from tkinter import *
 from PIL import Image, ImageTk
 
 main_window=Tk()
 main_window.title("AMR assitent virtual")
 
-main_window.geometry("800x400")
+main_window.geometry("800x450")
 main_window.resizable(0,0)
 main_window.configure(bg='#FFF')
 
+comandos = """
+        Comandos que puedes usar:
+        - Reproduce...(canción)
+        - Busca...(algo)
+        - Abre...(página web o app)
+        - Alarma..(hora en 24H)
+        - Archivo...(nombre)
+        - Colores(rojo, azul, amarillo)
+        - Termina   
+"""
+
 
 # label_title = Label(main_window, text="AMR", bg="#FFE4E1", fg="#8A2BE2", font=('Arial', 50, 'bold'))
+
+canvas_comandos= Canvas(bg='#FFE4E1', height=170, width=195)
+canvas_comandos.place(x=0, y=0)
+canvas_comandos.create_text(90, 80, text=comandos, fill='black', font='Arial 10')
+
+text_info = Text(main_window, bg='#6AFFFE', fg='black')
+text_info.place(x=0, y=170, height=280, width=195)
+
+
 
 # label_title.pack(pady=10)
 logo_amr = ImageTk.PhotoImage(Image.open("logo.png"))
@@ -42,7 +62,6 @@ def mexican_voice():
 
 def change_voice(id):
     engine.setProperty('voice', voices[id].id)
-    engine.setProperty('rate', 145)
     talk("Hola soy tu asistente virtual AMR")
 
 
@@ -52,9 +71,9 @@ engine = pyttsx3.init()
 
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[0].id)
-engine.setProperty('rate', 145)
-for voice in voices:
-    print(voice)
+
+""" for voice in voices:
+    print(voice) """
 
 sites = {
     'google': 'google.com',
@@ -77,11 +96,17 @@ def talk(text):
     engine.say(text)
     engine.runAndWait()
 
+def read_and_talk():
+    text = text_info.get("1.0", 'end')
+    talk(text)
+def write_text(text_wiki):
+    text_info.insert(INSERT, text_wiki)
+
 
 def listen():
     listener = sr.Recognizer()
     with sr.Microphone() as source:
-        print("Escuchando...")
+        talk('Te escucho')
         listener.adjust_for_ambient_noise(source)
         pc = listener.listen(source)
 
@@ -93,6 +118,7 @@ def listen():
         if name in rec:
             rec = rec.replace(name, '')
     return rec
+
 
 
 def run_amr():
@@ -111,8 +137,9 @@ def run_amr():
             search = rec.replace('busca', '')
             wikipedia.set_lang("es")
             wiki = wikipedia.summary(search, 1)
-            print(search + ":" + wiki)
             talk(wiki)
+            write_text(search + ":" + wiki)
+            break 
         elif 'alarma' in rec:
             num = rec.replace('alarma', '')
             num = num.strip()
@@ -178,6 +205,14 @@ button_voice_us = Button(main_window, text="Voz USA", fg="white", bg='purple', f
 
 button_voice_us.place(x=625, y=100,  width=100, height=30)
 
+button_listen = Button(main_window, text="Escuchar", fg="white", bg='purple', width=20,font=("Arial", 15,"bold" ), command=run_amr)
+
+button_listen.pack(pady=10)
+
+
+button_speak = Button(main_window, text="Hablar", fg="white", bg='blue', font=("Arial", 10,"bold"), command=read_and_talk)
+
+button_speak.place(x=625, y=140, width=100, height=30)
 
 
 
