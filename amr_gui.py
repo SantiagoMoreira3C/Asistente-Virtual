@@ -70,7 +70,7 @@ listener = sr.Recognizer()
 engine = pyttsx3.init()
 
 voices = engine.getProperty('voices')
-engine.setProperty('voice', voices[0].id)
+engine.setProperty('voice', voices[3].id)
 
 """ for voice in voices:
     print(voice) """
