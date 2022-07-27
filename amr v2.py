@@ -50,6 +50,26 @@ def listen():
             rec = rec.replace(name, '')
     return rec
 
+
+def clock(rec):
+    num = rec.replace('alarma', '')
+    num = num.strip()
+    talk("Alarma activada a las " + num + " horas")
+    if num[0] != '0' and len(num) < 5:
+        num = '0' + num
+    print(num)
+    while True:
+        if datetime.datetime.now().strftime('%H:%M') == num:
+            print("DESPIERTA!!!")
+            mixer.init()
+            mixer.music.load("alarma.mp3")
+            mixer.music.play()
+        else:
+            continue
+        if keyboard.read_key() == "s":
+            mixer.music.stop()
+            break
+
 def run_amr():
     while True:
         try:
@@ -69,18 +89,8 @@ def run_amr():
             print(search +":"+ wiki)
             talk(wiki)
         elif 'alarma' in rec:
-            num = rec.replace('alarma', '')
-            num = num.strip()
-            talk("Alarma activida a las "+ num + "horas")
-            while True:
-                if datetime.datetime.now().strftime('%H:%M') == num:
-                    print("DESPIERTA")
-                    mixer.init()
-                    mixer.music.load("alarma.mp3")
-                    mixer.music.play()
-                    if keyboard.read_key() == "s":
-                        mixer.music.stop()
-                        break
+            t = tr.Thread(target=clock, args=(rec,))
+            t.start()
         elif 'colores' in rec:
             talk("Enseguida")
             colors.capture()

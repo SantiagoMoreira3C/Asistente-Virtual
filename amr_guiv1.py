@@ -148,7 +148,7 @@ def run_amr():
                 if datetime.datetime.now().strftime('%H:%M') == num:
                     print("DESPIERTA")
                     mixer.init()
-                    mixer.music.load("auronplay-alarma.mp3")
+                    mixer.music.load("alarma.mp3")
                     mixer.music.play()
                     if keyboard.read_key() == "s":
                         mixer.music.stop()
